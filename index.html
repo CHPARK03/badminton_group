@@ -409,6 +409,7 @@
 
   /* ── 초기화 ──────────────────────────────── */
   function init() {
+    MEMBERS.sort((a, b) => a.localeCompare(b, 'ko'));
     const grid = document.getElementById('memberGrid');
     MEMBERS.forEach((name, i) => {
       const label = document.createElement('label');
