@@ -9,23 +9,25 @@
 
     :root {
       --green-dark: #1b5e20;
-      --green: #2e7d32;
-      --green-mid: #388e3c;
-      --green-light: #4caf50;
-      --green-bg: #e8f5e9;
-      --blue: #1565c0;
-      --blue-bg: #e3f2fd;
-      --red: #c62828;
-      --red-bg: #fce4ec;
-      --orange: #e65100;
-      --orange-bg: #fff8f0;
-      --gray-100: #f7f7f7;
-      --gray-200: #eeeeee;
-      --gray-400: #bdbdbd;
-      --gray-600: #757575;
-      --gray-900: #212121;
-      --shadow: 0 2px 10px rgba(0,0,0,0.09);
-      --radius: 12px;
+      --green:      #2e7d32;
+      --green-mid:  #388e3c;
+      --green-light:#4caf50;
+      --green-bg:   #e8f5e9;
+      --amber:      #f57f17;
+      --amber-bg:   #fff8e1;
+      --amber-border:#ffe082;
+      --blue:       #1565c0;
+      --red:        #c62828;
+      --red-bg:     #fce4ec;
+      --orange:     #e65100;
+      --orange-bg:  #fff8f0;
+      --gray-100:   #f7f7f7;
+      --gray-200:   #eeeeee;
+      --gray-400:   #bdbdbd;
+      --gray-600:   #757575;
+      --gray-900:   #212121;
+      --shadow:     0 2px 10px rgba(0,0,0,0.09);
+      --radius:     12px;
     }
 
     body {
@@ -36,308 +38,311 @@
       padding-bottom: 60px;
     }
 
-    /* ── Header ─────────────────────────────── */
+    /* ── Header ─────────────────────────── */
     .header {
-      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
       color: white;
-      padding: 22px 16px 18px;
+      padding: 20px 16px 16px;
       text-align: center;
     }
-    .header h1 { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.5px; }
-    .header p  { font-size: 0.82rem; opacity: 0.7; margin-top: 5px; }
+    .header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.5px; }
+    .header p  { font-size: 0.8rem; opacity: .7; margin-top: 4px; }
 
-    /* ── Container ───────────────────────────── */
-    .container { max-width: 880px; margin: 0 auto; padding: 16px; }
+    /* ── Step indicator ──────────────────── */
+    .step-bar {
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gray-400);
+      transition: all .2s;
+    }
+    .step-item.active {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    .step-item.done {
+      color: var(--green-mid);
+    }
+    .step-num {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      color: var(--gray-600);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step-item.active .step-num { background: var(--green); color: white; }
+    .step-item.done  .step-num  { background: var(--green-mid); color: white; }
+    .step-arrow { color: var(--gray-400); font-size: 0.75rem; }
 
-    /* ── Card ────────────────────────────────── */
+    /* ── Container ───────────────────────── */
+    .container { max-width: 880px; margin: 0 auto; padding: 14px; }
+
+    /* ── Card ────────────────────────────── */
     .card {
       background: white;
       border-radius: var(--radius);
       padding: 16px;
       box-shadow: var(--shadow);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
-
     .card-title {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--green);
       margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── Step pages ──────────────────────── */
+    .step-page { display: none; }
+    .step-page.active { display: block; }
+
+    /* ── Step 1: 희망 신청 ──────────────── */
+    .stat-row {
       display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* ── Settings ────────────────────────────── */
-    .settings-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: flex-end;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      flex: 1;
-      min-width: 90px;
-    }
-
-    .field label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--gray-600);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .field input[type="number"] {
-      height: 46px;
-      padding: 0 12px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      font-size: 1.15rem;
-      font-weight: 700;
-      text-align: center;
-      transition: border-color 0.2s;
-      width: 100%;
-    }
-    .field input[type="number"]:focus {
-      outline: none;
-      border-color: var(--green-light);
-    }
-
-    .btn-primary {
-      height: 46px;
-      padding: 0 24px;
-      background: var(--green);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      flex: 2;
-      min-width: 160px;
-    }
-    .btn-primary:hover  { background: var(--green-dark); }
-    .btn-primary:active { transform: scale(0.97); }
-
-    .settings-hint {
-      font-size: 0.73rem;
-      color: var(--gray-600);
-      margin-top: 8px;
-    }
-
-    /* ── Member list ─────────────────────────── */
-    .member-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
       gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
     }
-
-    .member-count-badge {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--green);
-      background: var(--green-bg);
-      padding: 3px 10px;
+    .stat-chip {
+      padding: 4px 12px;
       border-radius: 20px;
-    }
-
-    .btn-sm {
-      height: 30px;
-      padding: 0 11px;
-      background: white;
-      color: var(--green);
-      border: 1.5px solid var(--green-light);
-      border-radius: 6px;
-      font-size: 0.77rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s;
     }
-    .btn-sm:hover { background: var(--green-bg); }
+    .stat-chip.wish  { background: var(--green-bg);  color: var(--green); }
+    .stat-chip.fixed { background: var(--amber-bg);  color: var(--amber); }
+    .stat-chip.total { background: var(--gray-100);  color: var(--gray-600); }
 
+    .hint-box {
+      background: var(--gray-100);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.76rem;
+      color: var(--gray-600);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    /* Member grid */
     .member-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
       gap: 5px;
     }
-
-    .member-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .member-card {
       padding: 7px 8px;
       border: 2px solid var(--gray-200);
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.12s;
+      transition: all .12s;
       font-size: 0.82rem;
       user-select: none;
+      text-align: center;
+      font-weight: 500;
       position: relative;
-      white-space: nowrap;
-      overflow: hidden;
     }
-    .member-label:hover { border-color: var(--green-light); background: #f7fff7; }
-    .member-label.checked {
+    .member-card:hover { border-color: var(--green-light); }
+    .member-card.wish {
       border-color: var(--green-light);
       background: var(--green-bg);
       color: var(--green-dark);
-      font-weight: 600;
-    }
-    .member-label input[type="checkbox"] {
-      accent-color: var(--green-light);
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
-    }
-    .wait-badge {
-      position: absolute;
-      top: 2px;
-      right: 3px;
-      font-size: 0.58rem;
-      background: #fff3e0;
-      color: var(--orange);
-      border-radius: 4px;
-      padding: 1px 3px;
-      font-weight: 800;
-      line-height: 1.4;
-      pointer-events: none;
-    }
-
-    /* ── Results section ─────────────────────── */
-    .results-section { display: none; }
-    .results-section.visible { display: block; }
-
-    .results-title {
-      font-size: 0.9rem;
       font-weight: 700;
-      color: var(--green);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    }
+    .member-card.fixed {
+      border-color: var(--amber);
+      background: var(--amber-bg);
+      color: var(--amber);
+      font-weight: 700;
+    }
+    .member-card .state-icon {
+      position: absolute;
+      top: 2px; right: 4px;
+      font-size: 0.65rem;
+    }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    /* ── Buttons ─────────────────────────── */
+    .btn-primary {
+      height: 44px; padding: 0 24px;
+      background: var(--green); color: white;
+      border: none; border-radius: 8px;
+      font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; transition: background .15s, transform .1s;
+      flex: 2; min-width: 140px;
+    }
+    .btn-primary:hover  { background: var(--green-dark); }
+    .btn-primary:active { transform: scale(.97); }
+
+    .btn-secondary {
+      height: 44px; padding: 0 18px;
+      background: white; color: var(--green);
+      border: 2px solid var(--green-light); border-radius: 8px;
+      font-size: 0.85rem; font-weight: 700;
+      cursor: pointer; transition: background .15s;
+    }
+    .btn-secondary:hover { background: var(--green-bg); }
+
+    .btn-danger {
+      height: 44px; padding: 0 18px;
+      background: white; color: var(--red);
+      border: 2px solid #ef9a9a; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 700;
+      cursor: pointer; transition: background .15s;
+    }
+    .btn-danger:hover { background: var(--red-bg); }
+
+    .btn-sm {
+      height: 30px; padding: 0 11px;
+      background: white; color: var(--green);
+      border: 1.5px solid var(--green-light); border-radius: 6px;
+      font-size: 0.77rem; font-weight: 700; cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-sm:hover { background: var(--green-bg); }
+
+    /* Count / number input */
+    .count-field {
+      display: flex; flex-direction: column; gap: 4px;
+      flex: 1; min-width: 90px;
+    }
+    .count-field label {
+      font-size: 0.73rem; font-weight: 700;
+      color: var(--gray-600); text-transform: uppercase; letter-spacing: .3px;
+    }
+    .count-field input[type="number"] {
+      height: 44px; padding: 0 12px;
+      border: 2px solid var(--gray-200); border-radius: 8px;
+      font-size: 1.1rem; font-weight: 700; text-align: center;
+      transition: border-color .2s; width: 100%;
+    }
+    .count-field input:focus { outline: none; border-color: var(--green-light); }
+
+    /* ── Step 2: 추첨 결과 ──────────────── */
+    .result-group {
+      margin-bottom: 12px;
+    }
+    .result-group-title {
+      font-size: 0.8rem; font-weight: 700;
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .result-group-title.fixed-title { color: var(--amber); }
+    .result-group-title.drawn-title  { color: var(--green); }
+    .result-group-title.fail-title   { color: var(--gray-600); }
+
+    .name-chips {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .name-chip {
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.82rem; font-weight: 600;
+    }
+    .name-chip.fixed { background: var(--amber-bg); color: var(--amber); border: 1.5px solid var(--amber-border); }
+    .name-chip.drawn { background: var(--green-bg);  color: var(--green);  border: 1.5px solid #a5d6a7; }
+    .name-chip.fail  { background: var(--gray-100);  color: var(--gray-600); border: 1.5px solid var(--gray-200); }
+
+    .confirmed-banner {
+      background: var(--green-bg);
+      border: 2px solid #a5d6a7;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 8px;
+      margin-bottom: 12px;
+    }
+    .confirmed-banner-text {
+      font-size: 0.95rem; font-weight: 700; color: var(--green);
+    }
+
+    /* ── Step 3: 코트 편성 ──────────────── */
+    .settings-row {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+    }
+    .settings-hint {
+      font-size: 0.73rem; color: var(--gray-600); margin-top: 8px;
     }
 
     .courts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 10px; margin-bottom: 12px;
     }
-
     .court-card {
-      border-radius: 10px;
-      overflow: hidden;
+      border-radius: 10px; overflow: hidden;
       border: 2px solid #d0e8d0;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      box-shadow: 0 1px 6px rgba(0,0,0,.07);
     }
     .court-head {
-      background: var(--green);
-      color: white;
-      padding: 10px 13px;
-      font-weight: 800;
-      font-size: 0.88rem;
-      letter-spacing: 0.2px;
+      background: var(--green); color: white;
+      padding: 10px 13px; font-weight: 800; font-size: .88rem;
     }
-    .court-team {
-      padding: 10px 13px;
-    }
-    .court-team + .court-team {
-      border-top: 1px dashed var(--gray-200);
-    }
+    .court-team { padding: 10px 13px; }
+    .court-team + .court-team { border-top: 1px dashed var(--gray-200); }
     .team-label {
-      font-size: 0.7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 5px;
+      font-size: .7rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px;
     }
     .team-a { background: #f6faff; }
     .team-b { background: #fff6f6; }
     .team-a .team-label { color: var(--blue); }
     .team-b .team-label { color: var(--red); }
     .team-players { display: flex; flex-direction: column; gap: 3px; }
-    .team-player { font-size: 0.88rem; font-weight: 500; padding: 1px 0; }
+    .team-player { font-size: .88rem; font-weight: 500; padding: 1px 0; }
 
-    /* ── Waiting ─────────────────────────────── */
     .waiting-wrap {
       background: var(--orange-bg);
-      border: 2px solid #ffd9b3;
-      border-radius: 10px;
-      padding: 13px 14px;
-      margin-bottom: 14px;
+      border: 2px solid #ffd9b3; border-radius: 10px;
+      padding: 12px 14px; margin-bottom: 12px;
     }
     .waiting-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--orange);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      font-size: .85rem; font-weight: 700; color: var(--orange);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
     }
-    .waiting-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
+    .waiting-chips { display: flex; flex-wrap: wrap; gap: 5px; }
     .waiting-chip {
-      background: white;
-      color: var(--orange);
+      background: white; color: var(--orange);
       border: 1.5px solid #ffcc80;
-      padding: 4px 11px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      padding: 4px 11px; border-radius: 20px;
+      font-size: .8rem; font-weight: 600;
     }
 
-    /* ── Reset button ────────────────────────── */
-    .btn-reset {
-      height: 38px;
-      padding: 0 18px;
-      background: white;
-      color: var(--red);
-      border: 2px solid #ef9a9a;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s;
-      margin-bottom: 14px;
-    }
-    .btn-reset:hover { background: var(--red-bg); }
-
-    /* ── Toast ───────────────────────────────── */
+    /* ── Toast ───────────────────────────── */
     .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(70px);
-      background: rgba(30,30,30,0.92);
-      color: white;
-      padding: 10px 22px;
-      border-radius: 22px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: transform 0.28s ease;
-      z-index: 999;
-      white-space: nowrap;
+      background: rgba(30,30,30,.92); color: white;
+      padding: 10px 22px; border-radius: 22px;
+      font-size: .85rem; font-weight: 500;
+      transition: transform .28s ease; z-index: 999; white-space: nowrap;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── Responsive ──────────────────────────── */
+    /* ── Responsive ──────────────────────── */
     @media (max-width: 500px) {
       .courts-grid { grid-template-columns: 1fr 1fr; }
       .member-grid { grid-template-columns: repeat(4, 1fr); }
-      .btn-primary { min-width: 120px; }
     }
   </style>
 </head>
@@ -348,45 +353,114 @@
   <p>전계구 배드민턴 동아리</p>
 </div>
 
+<!-- Step indicator -->
+<div class="step-bar">
+  <div class="step-item active" id="si1">
+    <div class="step-num">1</div><span>희망 신청</span>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step-item" id="si2">
+    <div class="step-num">2</div><span>참가 확정</span>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step-item" id="si3">
+    <div class="step-num">3</div><span>코트 편성</span>
+  </div>
+</div>
+
 <div class="container">
 
-  <!-- Settings -->
-  <div class="card">
-    <div class="settings-row">
-      <div class="field">
-        <label>코트 수 (m)</label>
-        <input type="number" id="courtCount" value="2" min="1" max="20">
+  <!-- ═══ STEP 1: 희망 신청 ════════════════════ -->
+  <div class="step-page active" id="page1">
+
+    <div class="card">
+      <div class="hint-box">
+        ✋ <b>1회 클릭</b> — 희망 참가 &nbsp;·&nbsp;
+        📌 <b>2회 클릭</b> — 고정 참가 (추첨 불문 항상 포함) &nbsp;·&nbsp;
+        ❌ <b>3회 클릭</b> — 취소
       </div>
-      <div class="field">
-        <label>선출 인원 (n)</label>
-        <input type="number" id="playerCount" value="8" min="4" max="220">
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+        <div class="stat-row" style="margin-bottom:0">
+          <span class="stat-chip wish"  id="wishCount">희망 0명</span>
+          <span class="stat-chip fixed" id="fixedCount">고정 0명</span>
+          <span class="stat-chip total" id="totalCount">합계 0명</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm" onclick="clearAll()">전체 취소</button>
+        </div>
       </div>
-      <button class="btn-primary" onclick="assignCourts()">🎲 랜덤 편성</button>
+
+      <div class="member-grid" id="memberGrid"></div>
     </div>
-    <div class="settings-hint">💡 복식 기준 코트당 4명 (2 vs 2) · 선출 인원 = 코트 수 × 4</div>
+
+    <div class="card">
+      <div class="settings-row">
+        <div class="count-field">
+          <label>참가 인원 수</label>
+          <input type="number" id="participantCount" value="12" min="1" max="55">
+        </div>
+        <button class="btn-primary" onclick="runLottery()">🎲 추첨하기</button>
+      </div>
+      <div class="settings-hint">💡 고정 참가자는 항상 포함 · 나머지는 희망자 중 랜덤 추첨</div>
+    </div>
   </div>
 
-  <!-- Member List -->
-  <div class="card">
-    <div class="member-top">
-      <div class="card-title" style="margin-bottom:0">👥 참가자 명단</div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <span class="member-count-badge" id="selectedCount">0명 선택</span>
-        <button class="btn-sm" onclick="toggleAll(true)">전체 선택</button>
-        <button class="btn-sm" onclick="toggleAll(false)">전체 해제</button>
+  <!-- ═══ STEP 2: 참가 확정 ════════════════════ -->
+  <div class="step-page" id="page2">
+
+    <div class="confirmed-banner">
+      <span class="confirmed-banner-text" id="confirmedBannerText">참가 확정 0명</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-secondary" onclick="rerunLottery()">🔄 재추첨</button>
+        <button class="btn-secondary" onclick="goToStep(1)">← 뒤로</button>
       </div>
     </div>
-    <div class="member-grid" id="memberGrid"></div>
+
+    <div class="card" id="lotteryResultCard">
+      <!-- rendered by JS -->
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;">
+      <button class="btn-primary" style="flex:none;min-width:160px;" onclick="goToStep(3)">
+        코트 편성하기 →
+      </button>
+    </div>
   </div>
 
-  <!-- Results -->
-  <div class="results-section" id="resultsSection">
-    <div class="results-title">🏆 편성 결과</div>
+  <!-- ═══ STEP 3: 코트 편성 ════════════════════ -->
+  <div class="step-page" id="page3">
 
-    <button class="btn-reset" onclick="resetWaiting()">🔄 대기조 초기화</button>
+    <div class="card">
+      <div class="settings-row">
+        <div class="count-field">
+          <label>코트 수 (m)</label>
+          <input type="number" id="courtCount" value="2" min="1" max="20">
+        </div>
+        <div class="count-field">
+          <label>선출 인원 (n)</label>
+          <input type="number" id="playerCount" value="8" min="4" max="220">
+        </div>
+        <button class="btn-primary" onclick="assignCourts()">🎲 랜덤 편성</button>
+      </div>
+      <div class="settings-hint">💡 복식 기준 코트당 4명 (2 vs 2)</div>
+    </div>
 
-    <div class="courts-grid" id="courtsGrid"></div>
-    <div id="waitingWrap"></div>
+    <div id="courtResultWrap" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <div class="card-title" style="margin:0">🏆 편성 결과</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-danger" onclick="resetWaiting()">대기조 초기화</button>
+          <button class="btn-secondary" onclick="goToStep(2)">← 뒤로</button>
+        </div>
+      </div>
+      <div class="courts-grid" id="courtsGrid"></div>
+      <div id="waitingWrap"></div>
+    </div>
+
+    <div id="courtBackBtn" style="display:flex;justify-content:flex-start;margin-top:4px;">
+      <button class="btn-secondary" onclick="goToStep(2)">← 참가 확정으로</button>
+    </div>
   </div>
 
 </div>
@@ -403,140 +477,202 @@
     "이도형","이상민","이수민","이현수","전민경","전우진","전형준",
     "정원일","정하건","정호진","지승후","차수애","이채원","채유리",
     "최지원","최진성","표지안","한의진","한종현","허준우"
-  ];
+  ].sort((a, b) => a.localeCompare(b, 'ko'));
 
-  let waitingList = []; // 현재 대기 중인 인원 이름 목록
+  // 'none' | 'wish' | 'fixed'
+  let memberStates = new Array(MEMBERS.length).fill('none');
+  let confirmedParticipants = [];  // 추첨 후 확정된 참가자
+  let waitingList = [];            // 코트 미배정 대기자
 
-  /* ── 초기화 ──────────────────────────────── */
+  /* ── 초기화 ──────────────────────── */
   function init() {
-    MEMBERS.sort((a, b) => a.localeCompare(b, 'ko'));
     const grid = document.getElementById('memberGrid');
     MEMBERS.forEach((name, i) => {
-      const label = document.createElement('label');
-      label.className = 'member-label';
-      label.id = `ml-${i}`;
-      label.innerHTML = `<input type="checkbox" value="${name}"><span>${name}</span>`;
-      label.querySelector('input').addEventListener('change', updateCount);
-      grid.appendChild(label);
+      const card = document.createElement('div');
+      card.className = 'member-card';
+      card.id = `mc-${i}`;
+      card.textContent = name;
+      card.onclick = () => toggleMember(i);
+      grid.appendChild(card);
     });
-    updateCount();
   }
 
-  /* ── 전체 선택/해제 ──────────────────────── */
-  function toggleAll(checked) {
-    document.querySelectorAll('#memberGrid input').forEach((cb, i) => {
-      cb.checked = checked;
-      document.getElementById(`ml-${i}`).classList.toggle('checked', checked);
-    });
-    updateCount();
+  /* ── 멤버 상태 토글 ──────────────── */
+  function toggleMember(i) {
+    const cycle = { none: 'wish', wish: 'fixed', fixed: 'none' };
+    memberStates[i] = cycle[memberStates[i]];
+    renderMemberCard(i);
+    updateStats();
   }
 
-  /* ── 선택 수 업데이트 + 대기 배지 ───────── */
-  function updateCount() {
-    let count = 0;
-    MEMBERS.forEach((name, i) => {
-      const label = document.getElementById(`ml-${i}`);
-      const cb    = label.querySelector('input');
-      label.classList.toggle('checked', cb.checked);
-      if (cb.checked) count++;
+  function renderMemberCard(i) {
+    const card = document.getElementById(`mc-${i}`);
+    const state = memberStates[i];
+    card.className = `member-card ${state !== 'none' ? state : ''}`;
 
-      // 대기 배지
-      const existing = label.querySelector('.wait-badge');
-      if (waitingList.includes(name)) {
-        if (!existing) {
-          const badge = document.createElement('span');
-          badge.className = 'wait-badge';
-          badge.textContent = '대기';
-          label.appendChild(badge);
-        }
-      } else {
-        if (existing) existing.remove();
-      }
-    });
-    document.getElementById('selectedCount').textContent = `${count}명 선택`;
-  }
+    // Remove old icon
+    const old = card.querySelector('.state-icon');
+    if (old) old.remove();
 
-  /* ── 유틸 ────────────────────────────────── */
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+    if (state === 'wish') {
+      const icon = document.createElement('span');
+      icon.className = 'state-icon';
+      icon.textContent = '✓';
+      card.appendChild(icon);
+    } else if (state === 'fixed') {
+      const icon = document.createElement('span');
+      icon.className = 'state-icon';
+      icon.textContent = '📌';
+      card.appendChild(icon);
     }
-    return a;
   }
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2600);
+  function updateStats() {
+    const wish  = memberStates.filter(s => s === 'wish').length;
+    const fixed = memberStates.filter(s => s === 'fixed').length;
+    document.getElementById('wishCount').textContent  = `희망 ${wish}명`;
+    document.getElementById('fixedCount').textContent = `고정 ${fixed}명`;
+    document.getElementById('totalCount').textContent = `합계 ${wish + fixed}명`;
   }
 
-  /* ── 핵심: 랜덤 편성 ─────────────────────── */
+  function clearAll() {
+    memberStates.fill('none');
+    MEMBERS.forEach((_, i) => renderMemberCard(i));
+    updateStats();
+  }
+
+  /* ── 추첨 ────────────────────────── */
+  function runLottery() {
+    const n = parseInt(document.getElementById('participantCount').value) || 0;
+    const fixedMembers = MEMBERS.filter((_, i) => memberStates[i] === 'fixed');
+    const wishMembers  = MEMBERS.filter((_, i) => memberStates[i] === 'wish');
+
+    if (n < 1) { showToast('참가 인원 수를 1명 이상으로 입력해주세요.'); return; }
+
+    if (fixedMembers.length > n) {
+      showToast(`고정 참가자(${fixedMembers.length}명)가 참가 인원(${n}명)보다 많습니다.`);
+      return;
+    }
+
+    const totalPool = fixedMembers.length + wishMembers.length;
+    if (totalPool < n) {
+      showToast(`희망+고정(${totalPool}명)이 참가 인원(${n}명)보다 적습니다.`);
+      return;
+    }
+
+    const slotsLeft = n - fixedMembers.length;
+    const drawn = shuffle(wishMembers).slice(0, slotsLeft);
+    const failed = wishMembers.filter(p => !drawn.includes(p));
+
+    confirmedParticipants = [...fixedMembers, ...drawn];
+
+    // 인원 수 기본값 업데이트
+    document.getElementById('playerCount').value = Math.min(n, Math.floor(n / 4) * 4);
+
+    renderLotteryResult(fixedMembers, drawn, failed);
+    goToStep(2);
+    showToast(`🎲 추첨 완료! 참가 확정 ${confirmedParticipants.length}명`);
+  }
+
+  function rerunLottery() {
+    // 현재 희망/고정 상태 유지하며 재추첨
+    const n = parseInt(document.getElementById('participantCount').value) || 0;
+    const fixedMembers = MEMBERS.filter((_, i) => memberStates[i] === 'fixed');
+    const wishMembers  = MEMBERS.filter((_, i) => memberStates[i] === 'wish');
+
+    const slotsLeft = n - fixedMembers.length;
+    const drawn  = shuffle(wishMembers).slice(0, slotsLeft);
+    const failed = wishMembers.filter(p => !drawn.includes(p));
+
+    confirmedParticipants = [...fixedMembers, ...drawn];
+    renderLotteryResult(fixedMembers, drawn, failed);
+    showToast(`🔄 재추첨 완료!`);
+  }
+
+  function renderLotteryResult(fixed, drawn, failed) {
+    document.getElementById('confirmedBannerText').textContent =
+      `참가 확정 ${fixed.length + drawn.length}명`;
+
+    let html = '';
+
+    if (fixed.length > 0) {
+      html += `
+        <div class="result-group">
+          <div class="result-group-title fixed-title">📌 고정 참가 — ${fixed.length}명</div>
+          <div class="name-chips">
+            ${fixed.map(p => `<span class="name-chip fixed">${p}</span>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    if (drawn.length > 0) {
+      html += `
+        <div class="result-group">
+          <div class="result-group-title drawn-title">🎲 추첨 당첨 — ${drawn.length}명</div>
+          <div class="name-chips">
+            ${drawn.map(p => `<span class="name-chip drawn">${p}</span>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    if (failed.length > 0) {
+      html += `
+        <div class="result-group">
+          <div class="result-group-title fail-title">😢 미선발 — ${failed.length}명</div>
+          <div class="name-chips">
+            ${failed.map(p => `<span class="name-chip fail">${p}</span>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    document.getElementById('lotteryResultCard').innerHTML = html;
+  }
+
+  /* ── 코트 편성 ───────────────────── */
   function assignCourts() {
-    const m = parseInt(document.getElementById('courtCount').value) || 0;
+    const m = parseInt(document.getElementById('courtCount').value)  || 0;
     const n = parseInt(document.getElementById('playerCount').value) || 0;
 
-    // 유효성 검사
     if (m < 1) { showToast('코트 수를 1 이상으로 설정해주세요.'); return; }
     if (n < 4)  { showToast('선출 인원을 4명 이상으로 설정해주세요.'); return; }
 
-    const needed = m * 4; // 코트 배정에 필요한 인원
-    if (n < needed) {
-      showToast(`코트 ${m}개 복식엔 ${needed}명 필요합니다. (현재 n=${n})`);
+    const needed = m * 4;
+    if (n < needed) { showToast(`코트 ${m}개 복식엔 ${needed}명 필요합니다.`); return; }
+
+    if (confirmedParticipants.length < needed) {
+      showToast(`확정 참가자(${confirmedParticipants.length}명)가 부족합니다. (필요: ${needed}명)`);
       return;
     }
 
-    const present = Array.from(
-      document.querySelectorAll('#memberGrid input:checked')
-    ).map(cb => cb.value);
-
-    if (present.length < needed) {
-      showToast(`최소 ${needed}명 선택이 필요합니다. (현재 ${present.length}명)`);
-      return;
-    }
-
-    // 대기조 우선 선발 → 나머지 랜덤 보충
+    const present = confirmedParticipants;
     const priorityPool = shuffle(present.filter(p => waitingList.includes(p)));
     const regularPool  = shuffle(present.filter(p => !waitingList.includes(p)));
 
     let selected;
     if (priorityPool.length >= needed) {
-      // 대기조만으로도 충분한 경우
       selected = priorityPool.slice(0, needed);
     } else {
-      // 대기조 전원 + 일반에서 보충
-      selected = [
-        ...priorityPool,
-        ...regularPool.slice(0, needed - priorityPool.length)
-      ];
+      selected = [...priorityPool, ...regularPool.slice(0, needed - priorityPool.length)];
     }
 
-    // 최종 코트 배정 인원 셔플
     const players = shuffle(selected);
-
-    // 새 대기조 = 참가자 중 코트에 배정되지 않은 인원
     waitingList = present.filter(p => !players.includes(p));
 
-    // 코트 편성
     const courts = [];
     for (let i = 0; i < m; i++) {
       const four = players.slice(i * 4, i * 4 + 4);
       courts.push({ num: i + 1, teamA: four.slice(0, 2), teamB: four.slice(2, 4) });
     }
 
-    renderResults(courts, waitingList);
-    updateCount();
+    renderCourtResult(courts, waitingList);
     showToast(`🎲 ${m}코트 편성 완료! 대기 ${waitingList.length}명`);
   }
 
-  /* ── 결과 렌더링 ─────────────────────────── */
-  function renderResults(courts, waiting) {
-    const section = document.getElementById('resultsSection');
-    section.classList.add('visible');
+  function renderCourtResult(courts, waiting) {
+    const wrap = document.getElementById('courtResultWrap');
+    wrap.style.display = 'block';
+    document.getElementById('courtBackBtn').style.display = 'none';
 
-    // 코트 카드
     document.getElementById('courtsGrid').innerHTML = courts.map(c => `
       <div class="court-card">
         <div class="court-head">🏸 코트 ${c.num}</div>
@@ -555,30 +691,62 @@
       </div>
     `).join('');
 
-    // 대기조
-    const wrap = document.getElementById('waitingWrap');
+    const waitWrap = document.getElementById('waitingWrap');
     if (waiting.length > 0) {
-      wrap.innerHTML = `
+      waitWrap.innerHTML = `
         <div class="waiting-wrap">
           <div class="waiting-title">⏳ 대기조 — ${waiting.length}명 (다음 편성 시 우선 배정)</div>
           <div class="waiting-chips">
             ${waiting.map(p => `<span class="waiting-chip">${p}</span>`).join('')}
           </div>
-        </div>
-      `;
+        </div>`;
     } else {
-      wrap.innerHTML = '';
+      waitWrap.innerHTML = '';
     }
 
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  /* ── 대기조 초기화 ───────────────────────── */
   function resetWaiting() {
     waitingList = [];
-    updateCount();
     document.getElementById('waitingWrap').innerHTML = '';
     showToast('대기조가 초기화되었습니다.');
+  }
+
+  /* ── 단계 이동 ───────────────────── */
+  function goToStep(n) {
+    [1, 2, 3].forEach(i => {
+      document.getElementById(`page${i}`).classList.toggle('active', i === n);
+      const si = document.getElementById(`si${i}`);
+      si.classList.remove('active', 'done');
+      if (i === n) si.classList.add('active');
+      if (i < n)  si.classList.add('done');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 3단계 진입 시 선출 인원 기본값 설정
+    if (n === 3) {
+      const total = confirmedParticipants.length;
+      const courts = parseInt(document.getElementById('courtCount').value) || 2;
+      document.getElementById('playerCount').value = Math.min(total, Math.floor(total / 4) * 4);
+    }
+  }
+
+  /* ── 유틸 ────────────────────────── */
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
   }
 
   init();
