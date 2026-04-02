@@ -355,11 +355,11 @@
     <div class="settings-row">
       <div class="field">
         <label>코트 수 (m)</label>
-        <input type="number" id="courtCount" value="2" min="1" max="20" oninput="onCourtChange()">
+        <input type="number" id="courtCount" value="2" min="1" max="20">
       </div>
       <div class="field">
         <label>선출 인원 (n)</label>
-        <input type="number" id="playerCount" value="8" min="4" max="220" oninput="onPlayerChange()">
+        <input type="number" id="playerCount" value="8" min="4" max="220">
       </div>
       <button class="btn-primary" onclick="assignCourts()">🎲 랜덤 편성</button>
     </div>
@@ -419,17 +419,6 @@
       grid.appendChild(label);
     });
     updateCount();
-  }
-
-  /* ── 코트 수 ↔ 선출 인원 연동 ────────────── */
-  function onCourtChange() {
-    const m = parseInt(document.getElementById('courtCount').value) || 1;
-    document.getElementById('playerCount').value = m * 4;
-  }
-
-  function onPlayerChange() {
-    const n = parseInt(document.getElementById('playerCount').value) || 4;
-    document.getElementById('courtCount').value = Math.max(1, Math.floor(n / 4));
   }
 
   /* ── 전체 선택/해제 ──────────────────────── */
