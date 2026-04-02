@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏸 배드민턴 조 편성기</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-dark: #1b5e20;
+      --green: #2e7d32;
+      --green-mid: #388e3c;
+      --green-light: #4caf50;
+      --green-bg: #e8f5e9;
+      --blue: #1565c0;
+      --blue-bg: #e3f2fd;
+      --red: #c62828;
+      --red-bg: #fce4ec;
+      --orange: #e65100;
+      --orange-bg: #fff8f0;
+      --gray-100: #f7f7f7;
+      --gray-200: #eeeeee;
+      --gray-400: #bdbdbd;
+      --gray-600: #757575;
+      --gray-900: #212121;
+      --shadow: 0 2px 10px rgba(0,0,0,0.09);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', 'Segoe UI', sans-serif;
+      background: #eef3ee;
+      color: var(--gray-900);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      color: white;
+      padding: 22px 16px 18px;
+      text-align: center;
+    }
+    .header h1 { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.5px; }
+    .header p  { font-size: 0.82rem; opacity: 0.7; margin-top: 5px; }
+
+    /* ── Container ───────────────────────────── */
+    .container { max-width: 880px; margin: 0 auto; padding: 16px; }
+
+    /* ── Card ────────────────────────────────── */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Settings ────────────────────────────── */
+    .settings-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .field input[type="number"] {
+      height: 46px;
+      padding: 0 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-align: center;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .field input[type="number"]:focus {
+      outline: none;
+      border-color: var(--green-light);
+    }
+
+    .btn-primary {
+      height: 46px;
+      padding: 0 24px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      flex: 2;
+      min-width: 160px;
+    }
+    .btn-primary:hover  { background: var(--green-dark); }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .settings-hint {
+      font-size: 0.73rem;
+      color: var(--gray-600);
+      margin-top: 8px;
+    }
+
+    /* ── Member list ─────────────────────────── */
+    .member-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .member-count-badge {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--green);
+      background: var(--green-bg);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .btn-sm {
+      height: 30px;
+      padding: 0 11px;
+      background: white;
+      color: var(--green);
+      border: 1.5px solid var(--green-light);
+      border-radius: 6px;
+      font-size: 0.77rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-sm:hover { background: var(--green-bg); }
+
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+      gap: 5px;
+    }
+
+    .member-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 8px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.12s;
+      font-size: 0.82rem;
+      user-select: none;
+      position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .member-label:hover { border-color: var(--green-light); background: #f7fff7; }
+    .member-label.checked {
+      border-color: var(--green-light);
+      background: var(--green-bg);
+      color: var(--green-dark);
+      font-weight: 600;
+    }
+    .member-label input[type="checkbox"] {
+      accent-color: var(--green-light);
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    .wait-badge {
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      font-size: 0.58rem;
+      background: #fff3e0;
+      color: var(--orange);
+      border-radius: 4px;
+      padding: 1px 3px;
+      font-weight: 800;
+      line-height: 1.4;
+      pointer-events: none;
+    }
+
+    /* ── Results section ─────────────────────── */
+    .results-section { display: none; }
+    .results-section.visible { display: block; }
+
+    .results-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .courts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .court-card {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #d0e8d0;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    }
+    .court-head {
+      background: var(--green);
+      color: white;
+      padding: 10px 13px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      letter-spacing: 0.2px;
+    }
+    .court-team {
+      padding: 10px 13px;
+    }
+    .court-team + .court-team {
+      border-top: 1px dashed var(--gray-200);
+    }
+    .team-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 5px;
+    }
+    .team-a { background: #f6faff; }
+    .team-b { background: #fff6f6; }
+    .team-a .team-label { color: var(--blue); }
+    .team-b .team-label { color: var(--red); }
+    .team-players { display: flex; flex-direction: column; gap: 3px; }
+    .team-player { font-size: 0.88rem; font-weight: 500; padding: 1px 0; }
+
+    /* ── Waiting ─────────────────────────────── */
+    .waiting-wrap {
+      background: var(--orange-bg);
+      border: 2px solid #ffd9b3;
+      border-radius: 10px;
+      padding: 13px 14px;
+      margin-bottom: 14px;
+    }
+    .waiting-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .waiting-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .waiting-chip {
+      background: white;
+      color: var(--orange);
+      border: 1.5px solid #ffcc80;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ── Reset button ────────────────────────── */
+    .btn-reset {
+      height: 38px;
+      padding: 0 18px;
+      background: white;
+      color: var(--red);
+      border: 2px solid #ef9a9a;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-bottom: 14px;
+    }
+    .btn-reset:hover { background: var(--red-bg); }
+
+    /* ── Toast ───────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: rgba(30,30,30,0.92);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 22px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: transform 0.28s ease;
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Responsive ──────────────────────────── */
+    @media (max-width: 500px) {
+      .courts-grid { grid-template-columns: 1fr 1fr; }
+      .member-grid { grid-template-columns: repeat(4, 1fr); }
+      .btn-primary { min-width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏸 배드민턴 조 편성기</h1>
+  <p>전계구 배드민턴 동아리</p>
+</div>
+
+<div class="container">
+
+  <!-- Settings -->
+  <div class="card">
+    <div class="settings-row">
+      <div class="field">
+        <label>코트 수 (m)</label>
+        <input type="number" id="courtCount" value="2" min="1" max="20" oninput="onCourtChange()">
+      </div>
+      <div class="field">
+        <label>선출 인원 (n)</label>
+        <input type="number" id="playerCount" value="8" min="4" max="220" oninput="onPlayerChange()">
+      </div>
+      <button class="btn-primary" onclick="assignCourts()">🎲 랜덤 편성</button>
+    </div>
+    <div class="settings-hint">💡 복식 기준 코트당 4명 (2 vs 2) · 선출 인원 = 코트 수 × 4</div>
+  </div>
+
+  <!-- Member List -->
+  <div class="card">
+    <div class="member-top">
+      <div class="card-title" style="margin-bottom:0">👥 참가자 명단</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="member-count-badge" id="selectedCount">0명 선택</span>
+        <button class="btn-sm" onclick="toggleAll(true)">전체 선택</button>
+        <button class="btn-sm" onclick="toggleAll(false)">전체 해제</button>
+      </div>
+    </div>
+    <div class="member-grid" id="memberGrid"></div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-section" id="resultsSection">
+    <div class="results-title">🏆 편성 결과</div>
+
+    <button class="btn-reset" onclick="resetWaiting()">🔄 대기조 초기화</button>
+
+    <div class="courts-grid" id="courtsGrid"></div>
+    <div id="waitingWrap"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const MEMBERS = [
+    "박충호","장현우","남준현","가민","강다은","강하준","경철",
+    "김동성","김동후","김보민","김부완","김성민","김소정","김연준",
+    "김온유","김용성","김재웅","김진희","김태민","김태민(형)","김하람",
+    "나현지","남동원","박상욱","박소빈","박슬찬","박현빈","박혜일",
+    "시원","안재일","양진우","유한선","윤성빈","윤일환","이규민",
+    "이도형","이상민","이수민","이현수","전민경","전우진","전형준",
+    "정원일","정하건","정호진","지승후","차수애","이채원","채유리",
+    "최지원","최진성","표지안","한의진","한종현","허준우"
+  ];
+
+  let waitingList = []; // 현재 대기 중인 인원 이름 목록
+
+  /* ── 초기화 ──────────────────────────────── */
+  function init() {
+    const grid = document.getElementById('memberGrid');
+    MEMBERS.forEach((name, i) => {
+      const label = document.createElement('label');
+      label.className = 'member-label';
+      label.id = `ml-${i}`;
+      label.innerHTML = `<input type="checkbox" value="${name}"><span>${name}</span>`;
+      label.querySelector('input').addEventListener('change', updateCount);
+      grid.appendChild(label);
+    });
+    updateCount();
+  }
+
+  /* ── 코트 수 ↔ 선출 인원 연동 ────────────── */
+  function onCourtChange() {
+    const m = parseInt(document.getElementById('courtCount').value) || 1;
+    document.getElementById('playerCount').value = m * 4;
+  }
+
+  function onPlayerChange() {
+    const n = parseInt(document.getElementById('playerCount').value) || 4;
+    document.getElementById('courtCount').value = Math.max(1, Math.floor(n / 4));
+  }
+
+  /* ── 전체 선택/해제 ──────────────────────── */
+  function toggleAll(checked) {
+    document.querySelectorAll('#memberGrid input').forEach((cb, i) => {
+      cb.checked = checked;
+      document.getElementById(`ml-${i}`).classList.toggle('checked', checked);
+    });
+    updateCount();
+  }
+
+  /* ── 선택 수 업데이트 + 대기 배지 ───────── */
+  function updateCount() {
+    let count = 0;
+    MEMBERS.forEach((name, i) => {
+      const label = document.getElementById(`ml-${i}`);
+      const cb    = label.querySelector('input');
+      label.classList.toggle('checked', cb.checked);
+      if (cb.checked) count++;
+
+      // 대기 배지
+      const existing = label.querySelector('.wait-badge');
+      if (waitingList.includes(name)) {
+        if (!existing) {
+          const badge = document.createElement('span');
+          badge.className = 'wait-badge';
+          badge.textContent = '대기';
+          label.appendChild(badge);
+        }
+      } else {
+        if (existing) existing.remove();
+      }
+    });
+    document.getElementById('selectedCount').textContent = `${count}명 선택`;
+  }
+
+  /* ── 유틸 ────────────────────────────────── */
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  /* ── 핵심: 랜덤 편성 ─────────────────────── */
+  function assignCourts() {
+    const m = parseInt(document.getElementById('courtCount').value) || 0;
+    const n = parseInt(document.getElementById('playerCount').value) || 0;
+
+    // 유효성 검사
+    if (m < 1) { showToast('코트 수를 1 이상으로 설정해주세요.'); return; }
+    if (n < 4)  { showToast('선출 인원을 4명 이상으로 설정해주세요.'); return; }
+
+    const needed = m * 4; // 코트 배정에 필요한 인원
+    if (n < needed) {
+      showToast(`코트 ${m}개 복식엔 ${needed}명 필요합니다. (현재 n=${n})`);
+      return;
+    }
+
+    const present = Array.from(
+      document.querySelectorAll('#memberGrid input:checked')
+    ).map(cb => cb.value);
+
+    if (present.length < needed) {
+      showToast(`최소 ${needed}명 선택이 필요합니다. (현재 ${present.length}명)`);
+      return;
+    }
+
+    // 대기조 우선 선발 → 나머지 랜덤 보충
+    const priorityPool = shuffle(present.filter(p => waitingList.includes(p)));
+    const regularPool  = shuffle(present.filter(p => !waitingList.includes(p)));
+
+    let selected;
+    if (priorityPool.length >= needed) {
+      // 대기조만으로도 충분한 경우
+      selected = priorityPool.slice(0, needed);
+    } else {
+      // 대기조 전원 + 일반에서 보충
+      selected = [
+        ...priorityPool,
+        ...regularPool.slice(0, needed - priorityPool.length)
+      ];
+    }
+
+    // 최종 코트 배정 인원 셔플
+    const players = shuffle(selected);
+
+    // 새 대기조 = 참가자 중 코트에 배정되지 않은 인원
+    waitingList = present.filter(p => !players.includes(p));
+
+    // 코트 편성
+    const courts = [];
+    for (let i = 0; i < m; i++) {
+      const four = players.slice(i * 4, i * 4 + 4);
+      courts.push({ num: i + 1, teamA: four.slice(0, 2), teamB: four.slice(2, 4) });
+    }
+
+    renderResults(courts, waitingList);
+    updateCount();
+    showToast(`🎲 ${m}코트 편성 완료! 대기 ${waitingList.length}명`);
+  }
+
+  /* ── 결과 렌더링 ─────────────────────────── */
+  function renderResults(courts, waiting) {
+    const section = document.getElementById('resultsSection');
+    section.classList.add('visible');
+
+    // 코트 카드
+    document.getElementById('courtsGrid').innerHTML = courts.map(c => `
+      <div class="court-card">
+        <div class="court-head">🏸 코트 ${c.num}</div>
+        <div class="court-team team-a">
+          <div class="team-label">팀 A</div>
+          <div class="team-players">
+            ${c.teamA.map(p => `<div class="team-player">· ${p}</div>`).join('')}
+          </div>
+        </div>
+        <div class="court-team team-b">
+          <div class="team-label">팀 B</div>
+          <div class="team-players">
+            ${c.teamB.map(p => `<div class="team-player">· ${p}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // 대기조
+    const wrap = document.getElementById('waitingWrap');
+    if (waiting.length > 0) {
+      wrap.innerHTML = `
+        <div class="waiting-wrap">
+          <div class="waiting-title">⏳ 대기조 — ${waiting.length}명 (다음 편성 시 우선 배정)</div>
+          <div class="waiting-chips">
+            ${waiting.map(p => `<span class="waiting-chip">${p}</span>`).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      wrap.innerHTML = '';
+    }
+
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── 대기조 초기화 ───────────────────────── */
+  function resetWaiting() {
+    waitingList = [];
+    updateCount();
+    document.getElementById('waitingWrap').innerHTML = '';
+    showToast('대기조가 초기화되었습니다.');
+  }
+
+  init();
+</script>
+</body>
+</html>
