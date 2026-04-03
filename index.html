@@ -298,6 +298,22 @@
       background: var(--green); color: white;
       padding: 10px 13px; font-weight: 800; font-size: .88rem;
     }
+    .court-head.singles {
+      background: #1565c0;
+    }
+    .singles-players {
+      padding: 10px 13px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .singles-player {
+      font-size: .88rem; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .vs-badge {
+      font-size: .7rem; font-weight: 800; color: var(--gray-400);
+      padding: 1px 6px; border-radius: 4px;
+      background: var(--gray-100); margin: 0 4px;
+    }
     .court-team { padding: 10px 13px; }
     .court-team + .court-team { border-top: 1px dashed var(--gray-200); }
     .team-label {
@@ -439,16 +455,16 @@
     <div class="card">
       <div class="settings-row">
         <div class="count-field">
-          <label>코트 수 (m)</label>
-          <input type="number" id="courtCount" value="2" min="1" max="20">
+          <label>⚡ 단식 코트 수</label>
+          <input type="number" id="singlesCount" value="0" min="0" max="20" oninput="updateNeeded()">
         </div>
         <div class="count-field">
-          <label>선출 인원 (n)</label>
-          <input type="number" id="playerCount" value="8" min="4" max="220">
+          <label>🏸 복식 코트 수</label>
+          <input type="number" id="doublesCount" value="2" min="0" max="20" oninput="updateNeeded()">
         </div>
         <button class="btn-primary" onclick="assignCourts()">🎲 랜덤 편성</button>
       </div>
-      <div class="settings-hint">💡 복식 기준 코트당 4명 (2 vs 2)</div>
+      <div class="settings-hint" id="neededHint">💡 총 필요 인원: 8명 (단식 0×2 + 복식 2×4)</div>
     </div>
 
     <div id="courtResultWrap" style="display:none">
@@ -633,16 +649,23 @@
     document.getElementById('lotteryResultCard').innerHTML = html;
   }
 
+  /* ── 필요 인원 힌트 업데이트 ────── */
+  function updateNeeded() {
+    const s = parseInt(document.getElementById('singlesCount').value) || 0;
+    const d = parseInt(document.getElementById('doublesCount').value) || 0;
+    const needed = s * 2 + d * 4;
+    document.getElementById('neededHint').textContent =
+      `💡 총 필요 인원: ${needed}명 (단식 ${s}×2 + 복식 ${d}×4)`;
+  }
+
   /* ── 코트 편성 ───────────────────── */
   function assignCourts() {
-    const m = parseInt(document.getElementById('courtCount').value)  || 0;
-    const n = parseInt(document.getElementById('playerCount').value) || 0;
+    const s = parseInt(document.getElementById('singlesCount').value) || 0;
+    const d = parseInt(document.getElementById('doublesCount').value) || 0;
 
-    if (m < 1) { showToast('코트 수를 1 이상으로 설정해주세요.'); return; }
-    if (n < 4)  { showToast('선출 인원을 4명 이상으로 설정해주세요.'); return; }
+    if (s + d < 1) { showToast('코트를 1개 이상 설정해주세요.'); return; }
 
-    const needed = m * 4;
-    if (n < needed) { showToast(`코트 ${m}개 복식엔 ${needed}명 필요합니다.`); return; }
+    const needed = s * 2 + d * 4;
 
     if (confirmedParticipants.length < needed) {
       showToast(`확정 참가자(${confirmedParticipants.length}명)가 부족합니다. (필요: ${needed}명)`);
@@ -664,13 +687,21 @@
     waitingList = present.filter(p => !players.includes(p));
 
     const courts = [];
-    for (let i = 0; i < m; i++) {
-      const four = players.slice(i * 4, i * 4 + 4);
-      courts.push({ num: i + 1, teamA: four.slice(0, 2), teamB: four.slice(2, 4) });
+    let idx = 0;
+    // 단식 코트
+    for (let i = 0; i < s; i++) {
+      courts.push({ num: i + 1, type: 'singles', players: players.slice(idx, idx + 2) });
+      idx += 2;
+    }
+    // 복식 코트
+    for (let i = 0; i < d; i++) {
+      const four = players.slice(idx, idx + 4);
+      courts.push({ num: s + i + 1, type: 'doubles', teamA: four.slice(0, 2), teamB: four.slice(2, 4) });
+      idx += 4;
     }
 
     renderCourtResult(courts, waitingList);
-    showToast(`🎲 ${m}코트 편성 완료! 대기 ${waitingList.length}명`);
+    showToast(`🎲 편성 완료! 단식 ${s} · 복식 ${d}코트 · 대기 ${waitingList.length}명`);
   }
 
   function renderCourtResult(courts, waiting) {
@@ -678,23 +709,36 @@
     wrap.style.display = 'block';
     document.getElementById('courtBackBtn').style.display = 'none';
 
-    document.getElementById('courtsGrid').innerHTML = courts.map(c => `
-      <div class="court-card">
-        <div class="court-head">🏸 코트 ${c.num}</div>
-        <div class="court-team team-a">
-          <div class="team-label">팀 A</div>
-          <div class="team-players">
-            ${c.teamA.map(p => `<div class="team-player">· ${p}</div>`).join('')}
-          </div>
-        </div>
-        <div class="court-team team-b">
-          <div class="team-label">팀 B</div>
-          <div class="team-players">
-            ${c.teamB.map(p => `<div class="team-player">· ${p}</div>`).join('')}
-          </div>
-        </div>
-      </div>
-    `).join('');
+    document.getElementById('courtsGrid').innerHTML = courts.map(c => {
+      if (c.type === 'singles') {
+        return `
+          <div class="court-card">
+            <div class="court-head singles">⚡ 코트 ${c.num} <span style="font-size:.75rem;opacity:.8;font-weight:600">단식</span></div>
+            <div class="singles-players">
+              <div class="singles-player">· ${c.players[0]}</div>
+              <div><span class="vs-badge">VS</span></div>
+              <div class="singles-player">· ${c.players[1]}</div>
+            </div>
+          </div>`;
+      } else {
+        return `
+          <div class="court-card">
+            <div class="court-head">🏸 코트 ${c.num} <span style="font-size:.75rem;opacity:.8;font-weight:600">복식</span></div>
+            <div class="court-team team-a">
+              <div class="team-label">팀 A</div>
+              <div class="team-players">
+                ${c.teamA.map(p => `<div class="team-player">· ${p}</div>`).join('')}
+              </div>
+            </div>
+            <div class="court-team team-b">
+              <div class="team-label">팀 B</div>
+              <div class="team-players">
+                ${c.teamB.map(p => `<div class="team-player">· ${p}</div>`).join('')}
+              </div>
+            </div>
+          </div>`;
+      }
+    }).join('');
 
     const waitWrap = document.getElementById('waitingWrap');
     if (waiting.length > 0) {
@@ -729,14 +773,13 @@
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // 3단계 진입 시 참가자 목록 + 선출 인원 기본값 설정
+    // 3단계 진입 시 참가자 목록 + 힌트 업데이트
     if (n === 3) {
       const total = confirmedParticipants.length;
-      document.getElementById('playerCount').value = Math.min(total, Math.floor(total / 4) * 4);
-
       document.getElementById('confirmedTotal').textContent = `— ${total}명`;
       document.getElementById('confirmedChips').innerHTML =
         confirmedParticipants.map(p => `<span class="name-chip drawn">${p}</span>`).join('');
+      updateNeeded();
     }
   }
 
