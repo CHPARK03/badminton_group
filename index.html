@@ -587,9 +587,6 @@
 
     confirmedParticipants = [...fixedMembers, ...drawn];
 
-    // 인원 수 기본값 업데이트
-    document.getElementById('playerCount').value = Math.min(n, Math.floor(n / 4) * 4);
-
     renderLotteryResult(fixedMembers, drawn, failed);
     goToStep(2);
     showToast(`🎲 추첨 완료! 참가 확정 ${confirmedParticipants.length}명`);
